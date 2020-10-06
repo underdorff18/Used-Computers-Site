@@ -1,2 +1,4 @@
 # Untrack folders
 node_modules/
+# Untrack directory file from linux
+*.directory
