@@ -2,10 +2,17 @@
   "name": "marks-computers-backend",
   "version": "1.0.0",
   "description": "Backend web server for marks computers site",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/underdorff18/Computers-Site-Backend"
+  },
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Nick Overdorff",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
