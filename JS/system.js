@@ -1,4 +1,4 @@
-class Systems {
+class System {
     constructor (serialnum, model, OS, price, specs) {
         this.serialnum = serialnum;
         this.model = model;
@@ -8,4 +8,4 @@ class Systems {
     }
 }
 
-module.exports = Systems;
+module.exports = System;
