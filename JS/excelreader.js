@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const xlsx = require('xlsx');
+const chokidar = require('chokidar');
 const System = require('./system');
 
 const myfilepath = path.join(__dirname, 'Inventory', 'samplepc1234.xlsx');
@@ -23,4 +24,10 @@ function readInventoryFile(filepath) {
 
 console.log(readInventoryFile(myfilepath));
 
+var inventoryWatcher = chokidar.watch(path.join(__dirname, "Inventory"), {ignored: /^\./, persistent: true});
 
+// inventoryWatcher
+//     .on('add', function(path) {
+//         fs.appendFile('systems.json', ', ')
+//     })
+//
