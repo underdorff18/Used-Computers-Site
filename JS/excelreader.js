@@ -1,10 +1,13 @@
 const fs = require('fs');
-const path = require('path');
+const Path = require('path');
+const { MongoClient, ServerApiVersion } = require('mongodb');
+dbtools = require('./dbtools');
 const xlsx = require('xlsx');
 const chokidar = require('chokidar');
 const System = require('./system');
+const { all } = require('express/lib/application');
 
-const myfilepath = path.join(__dirname, 'Inventory', 'samplepc1234.xlsx');
+//const myfilepath = Path.join(__dirname, 'Inventory', 'samplepc1234.xlsx');
 
 function readInventoryFile(filepath) {
     let workbook = xlsx.readFileSync(filepath);
@@ -12,22 +15,29 @@ function readInventoryFile(filepath) {
     let sheetData = workbook.Sheets[sheetNames[0]];
 
     //Here is where we use known cell locations of the specs needed to build the systems file
-    let serialNum = sheetData.D1.v;
+    let serialnum = sheetData.D1.v;
     let model = sheetData.D2.v;
     let OS = sheetData.D3.v;
     let price = sheetData.D4.v;
     let specs = [sheetData.D5.v, sheetData.D6.v, sheetData.D7.v, sheetData.D8.v];
 
-    return new System(serialNum, model, OS, price, specs);
+    return new System(serialnum, model, OS, price, specs);
 }
 
 
-console.log(readInventoryFile(myfilepath));
+var inventoryWatcher = chokidar.watch(Path.join(__dirname, "Inventory"), {ignored: /^\./, persistent: true});
+console.log(`Watching directory for changes...` )
 
-var inventoryWatcher = chokidar.watch(path.join(__dirname, "Inventory"), {ignored: /^\./, persistent: true});
-
-// inventoryWatcher
-//     .on('add', function(path) {
-//         fs.appendFile('systems.json', ', ')
-//     })
-//
+inventoryWatcher
+    .on('add', function(filepath) {
+        dbtools.insertSystem(dbtools.collection, readInventoryFile(filepath));
+    })
+    .on('change', function(filepath) {
+        console.log('File', path, 'has been changed');
+    })
+    .on('unlink', function(filepath) {
+        dbtools.deleteSystem(dbtools.collection, parseInt(Path.basename(filepath, '.xlsx')));
+    })
+    .on('error', function(error) {
+        console.error('Error happened', error);
+    });
