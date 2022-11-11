@@ -30,13 +30,13 @@ console.log(`Watching directory for changes...` )
 
 inventoryWatcher
     .on('add', function(filepath) {
-        dbtools.insertSystem(dbtools.collection, readInventoryFile(filepath));
+        dbtools.insertSystem(readInventoryFile(filepath));
     })
     .on('change', function(filepath) {
         console.log('File', path, 'has been changed');
     })
     .on('unlink', function(filepath) {
-        dbtools.deleteSystem(dbtools.collection, parseInt(Path.basename(filepath, '.xlsx')));
+        dbtools.deleteSystem(parseInt(Path.basename(filepath, '.xlsx')));
     })
     .on('error', function(error) {
         console.error('Error happened', error);

@@ -11,7 +11,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/systems', async function(req, res) {
-	result = await dbtools.getAllSystems(dbtools.collection);
+	result = await dbtools.getAllSystems();
 	console.log(result);
 	res.send(result);
 

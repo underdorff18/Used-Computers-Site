@@ -7,16 +7,16 @@ client.connect();
 
 const dbtools = {
     collection: client.db('inventorydb').collection('systems'),
-    insertSystem: async function (collection, system) {
-        const result = await collection.insertOne(system);
+    insertSystem: async function (system) {
+        const result = await this.collection.insertOne(system);
         console.log(`Created a system entry with id: ${result.insertedId}`);
     },
-    deleteSystem: async function (collection, serial) {
-        const result = await collection.deleteOne({ serialnum: serial});
+    deleteSystem: async function (serial) {
+        const result = await this.collection.deleteOne({ serialnum: serial});
         console.log(`${result.deletedCount} document(s) was/were deleted.`);
     },
-    getAllSystems: async function (collection) {
-        cursor = await collection.find();
+    getAllSystems: async function () {
+        cursor = await this.collection.find();
         let allSystems = []
         await cursor.forEach( function (result) {allSystems.push(result);});
         return allSystems;
