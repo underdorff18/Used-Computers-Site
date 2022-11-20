@@ -1,7 +1,7 @@
 const fs = require('fs');
 const Path = require('path');
 const { MongoClient, ServerApiVersion } = require('mongodb');
-dbtools = require('./dbtools');
+const dbtools = require('./dbtools');
 const xlsx = require('xlsx');
 const chokidar = require('chokidar');
 const System = require('./system');
@@ -25,7 +25,11 @@ function readInventoryFile(filepath) {
 }
 
 
-var inventoryWatcher = chokidar.watch(Path.join(__dirname, "Inventory"), {ignored: /^\./, persistent: true});
+var inventoryWatcher = chokidar.watch(Path.join(__dirname, "Inventory"), {
+    ignored: /(^|[\/\\])\../,
+    persistent: true,
+    awaitWriteFinish: true,
+});
 console.log(`Watching directory for changes...` )
 
 inventoryWatcher
@@ -33,7 +37,7 @@ inventoryWatcher
         dbtools.insertSystem(readInventoryFile(filepath));
     })
     .on('change', function(filepath) {
-        console.log('File', path, 'has been changed');
+        dbtools.updateSystem(readInventoryFile(filepath));
     })
     .on('unlink', function(filepath) {
         dbtools.deleteSystem(parseInt(Path.basename(filepath, '.xlsx')));
