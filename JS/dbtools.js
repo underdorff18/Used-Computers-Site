@@ -26,6 +26,10 @@ const dbtools = {
         const result = await this.collection.deleteOne({ serialnum: serial});
         console.log(`${result.deletedCount} document(s) was/were deleted.`);
     },
+    deleteAllSystems: async function () {
+        const result = await this.collection.deleteMany({});
+        console.log(`${result.deletedCount} document(s) was/were deleted.`);
+    },
     getAllSystems: async function () {
         cursor = await this.collection.find();
         let allSystems = []

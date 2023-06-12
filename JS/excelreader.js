@@ -9,7 +9,9 @@ const { all } = require('express/lib/application');
 
 //const myfilepath = Path.join(__dirname, 'Inventory', 'samplepc1234.xlsx');
 
-function readInventoryFile(filepath) {
+//given a full path to a file, this function will produce a system object or an object with an error key 
+//if formatted incorrectly
+function readInventoryFile(filepath) {  
     //Checking for correct file type
     const fileinfo = Path.parse(filepath);
     if (fileinfo.ext !== ".xlsx") {
@@ -46,6 +48,30 @@ function readInventoryFile(filepath) {
     return system;
 }
 
+//This function reads all files in the given directory, and updates the database to match
+async function syncDirToDatabase(directory) {
+    dbtools.deleteAllSystems(); 
+    let files = fs.readdirSync(directory);
+    let systemsArr = [];
+    files.forEach((val, index) => {
+        let result = readInventoryFile(Path.join(directory, val))
+        if (result.error) {
+            console.log(`syncDirToDatabase: error with ${val}: ${result.error}`);
+        }
+        else {
+            console.log('here');
+            console.log(result);
+            console.log(val);
+            systemsArr.push(val);
+            dbtools.insertSystem(result);
+        }
+    })
+
+    console.log("Database synced. Current contents: ");
+    console.log(systemsArr);
+
+}
+
 
 var inventoryWatcher = chokidar.watch(Path.join(__dirname, "Inventory"), {
     ignored: /(^|[\/\\])\../,
@@ -54,6 +80,8 @@ var inventoryWatcher = chokidar.watch(Path.join(__dirname, "Inventory"), {
     ignoreInitial: true
 });
 console.log(`Watching directory for changes...` )
+
+syncDirToDatabase(Path.join(__dirname, "Inventory"));
 
 inventoryWatcher
     .on('add', function(filepath) {
