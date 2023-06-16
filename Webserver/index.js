@@ -1,6 +1,7 @@
 const express = require('express', '4.17.1');
 const fs = require('fs');
-dbtools = require('./dbtools');
+const Path = require('path');
+dbtools = require(Path.join(__dirname, '..', 'ExcelReader', 'dbtools.js'));
 
 const app = express();
 const port = 3000;
