@@ -7,7 +7,7 @@ const chokidar = require('chokidar');
 const System = require('./system');
 const { all } = require('express/lib/application');
 
-//const myfilepath = Path.join(__dirname, 'Inventory', 'samplepc1234.xlsx');
+const PathToInventoryDirectory = Path.join(__dirname, "Inventory");
 
 //given a full path to a file, this function will produce a system object or an object with an error key 
 //if formatted incorrectly
@@ -73,7 +73,7 @@ async function syncDirToDatabase(directory) {
 }
 
 
-var inventoryWatcher = chokidar.watch(Path.join(__dirname, "Inventory"), {
+var inventoryWatcher = chokidar.watch(PathToInventoryDirectory, {
     ignored: /(^|[\/\\])\../,
     persistent: true,
     awaitWriteFinish: true,
@@ -81,7 +81,7 @@ var inventoryWatcher = chokidar.watch(Path.join(__dirname, "Inventory"), {
 });
 console.log(`Watching directory for changes...` )
 
-syncDirToDatabase(Path.join(__dirname, "Inventory"));
+syncDirToDatabase(PathToInventoryDirectory);
 
 inventoryWatcher
     .on('add', function(filepath) {
