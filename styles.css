@@ -1,0 +1,10 @@
+#systems-container {
+    display: flex;
+    justify-content: center;
+}
+
+#system {
+    padding: 1rem;
+    border: 2px solid gray; 
+    margin: 1rem;
+}

@@ -8,13 +8,21 @@ const port = 3000;
 
 
 app.get('/', (req, res) => {
-	res.send('Homepage');
+	res.sendFile(Path.join(__dirname, "..", "systems.html"));
 });
+
+app.get('/index.js', (req, res) => {
+	res.sendFile(Path.join(__dirname, "..", "index.js"));
+})
+
+app.get('/styles.css', (req, res) => {
+	res.sendFile(Path.join(__dirname, "..", "styles.css"))
+})
 
 app.get('/systems', async function(req, res) {
 	result = await dbtools.getAllSystems();
 	console.log(result);
-	res.send(result);
+	res.json(result);
 
 });
 
