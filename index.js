@@ -15,16 +15,15 @@ function formatSystems(systems) {
     let systemsHTML = ""
     systems.forEach((system) => {
         systemsHTML = systemsHTML.concat(`
-            <div id="system">
-            <h1>${system.model}</h1>\n
-            <div id="system-details">
-            <p>${system.price} ${system.OS}</p>
-            <ul id="system-specs">
+            <div class="system-block">
+            <h2 class="system-title">${system.model}</h2>
+            <h3 class="system-OS">${system.OS}</h3>
+            <ul class="system-specs">
             `)
         system.specs.forEach((spec) => {
             systemsHTML = systemsHTML.concat(`<li id="system-spec">${spec}</li>`)
         })
-        systemsHTML = systemsHTML.concat('</ul></div></div>')
+        systemsHTML = systemsHTML.concat(`</ul><span class="system-price">\$${system.price}</span></div>`)
     });
 
     return systemsHTML;
